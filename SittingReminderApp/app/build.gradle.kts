@@ -9,16 +9,26 @@ android {
     namespace = "com.qysnb.sittingreminder"
     compileSdk = 35
 
+    signingConfigs {
+        create("release") {
+            storeFile = file("debug.keystore")
+            storePassword = "android"
+            keyAlias = "sittingreminder"
+            keyPassword = "android"
+        }
+    }
+
     defaultConfig {
         applicationId = "com.qysnb.sittingreminder"
         minSdk = 26
         targetSdk = 35
-        versionCode = 1
-        versionName = "0.1.0"
+        versionCode = 3
+        versionName = "0.3.0"
     }
 
     buildTypes {
         release {
+            signingConfig = signingConfigs.getByName("release")
             isMinifyEnabled = false
             proguardFiles(
                 getDefaultProguardFile("proguard-android-optimize.txt"),

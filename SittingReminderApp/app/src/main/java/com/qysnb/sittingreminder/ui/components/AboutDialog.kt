@@ -27,14 +27,15 @@ fun AboutDialog(onDismiss: () -> Unit) {
                 verticalArrangement = Arrangement.spacedBy(12.dp)
             ) {
                 AboutItem("软件名", "久坐助手")
-                AboutItem("版本号", "v 0.2.0")
-                AboutItem("GitHub", "待定")
+                AboutItem("版本号", "v 0.3.0")
+                AboutItem("功能", "定时站立提醒 · 入座延迟提醒 · 活跃时段控制 · 静默模式 · 可调振动强度")
+                AboutItem("GitHub", "github.com/qysnb/Sitting-Remider")
                 AboutItem(
                     "简介",
                     "久坐助手是一款轻量级提醒应用，定时提醒您起身活动，预防久坐带来的健康问题。"
                 )
                 AboutItem("开发者", "Qysnb with DeepSeek V4 Flash")
-                AboutItem("开源许可", "Apache Licence 2.0")
+                AboutItem("开源许可", "Apache License 2.0")
             }
         },
         confirmButton = {

@@ -7,6 +7,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Info
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
@@ -107,6 +108,87 @@ fun MainScreen(viewModel: MainViewModel = viewModel()) {
                         ringtoneUri = state.ringtoneUri,
                         onRingtoneSelected = viewModel::updateRingtoneUri
                     )
+                }
+            }
+
+            Card {
+                Column(modifier = Modifier.padding(16.dp)) {
+                    Text(
+                        "高级设置",
+                        style = MaterialTheme.typography.titleLarge,
+                        color = MaterialTheme.colorScheme.primary
+                    )
+                    Spacer(modifier = Modifier.height(12.dp))
+
+                    Row(
+                        modifier = Modifier.fillMaxWidth(),
+                        verticalAlignment = Alignment.CenterVertically,
+                        horizontalArrangement = Arrangement.SpaceBetween
+                    ) {
+                        Column {
+                            Text(
+                                "静默提醒",
+                                style = MaterialTheme.typography.titleMedium
+                            )
+                            Text(
+                                if (state.silentMode) "开启时不响铃" else "正常响铃",
+                                style = MaterialTheme.typography.bodySmall,
+                                color = MaterialTheme.colorScheme.onSurfaceVariant
+                            )
+                        }
+                        Switch(
+                            checked = state.silentMode,
+                            onCheckedChange = viewModel::toggleSilentMode
+                        )
+                    }
+
+                    HorizontalDivider(modifier = Modifier.padding(vertical = 8.dp))
+
+                    Row(
+                        modifier = Modifier.fillMaxWidth(),
+                        verticalAlignment = Alignment.CenterVertically,
+                        horizontalArrangement = Arrangement.SpaceBetween
+                    ) {
+                        Column {
+                            Text(
+                                "振动提醒",
+                                style = MaterialTheme.typography.titleMedium
+                            )
+                            Text(
+                                if (state.vibrationEnabled) "已开启" else "已关闭",
+                                style = MaterialTheme.typography.bodySmall,
+                                color = MaterialTheme.colorScheme.onSurfaceVariant
+                            )
+                        }
+                        Switch(
+                            checked = state.vibrationEnabled,
+                            onCheckedChange = viewModel::toggleVibration
+                        )
+                    }
+
+                    if (state.vibrationEnabled) {
+                        Spacer(modifier = Modifier.height(8.dp))
+                        Text(
+                            "振动强度",
+                            style = MaterialTheme.typography.bodyMedium,
+                            color = MaterialTheme.colorScheme.onSurfaceVariant
+                        )
+                        Spacer(modifier = Modifier.height(4.dp))
+                        Slider(
+                            value = state.vibrationIntensity.toFloat(),
+                            onValueChange = { viewModel.updateVibrationIntensity(it.toInt()) },
+                            valueRange = 1f..5f,
+                            steps = 3,
+                            modifier = Modifier.fillMaxWidth()
+                        )
+                        Row(
+                            modifier = Modifier.fillMaxWidth(),
+                            horizontalArrangement = Arrangement.SpaceBetween
+                        ) {
+                            Text("轻", style = MaterialTheme.typography.labelSmall)
+                            Text("强", style = MaterialTheme.typography.labelSmall)
+                        }
+                    }
                 }
             }
 

@@ -25,6 +25,9 @@ data class UiState(
     val ringtoneUri: String? = null,
     val nextTriggerTimeMillis: Long? = null,
     val isLoaded: Boolean = false,
+    val silentMode: Boolean = false,
+    val vibrationEnabled: Boolean = true,
+    val vibrationIntensity: Int = 3,
 )
 
 class MainViewModel(application: Application) : AndroidViewModel(application) {
@@ -55,6 +58,9 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
                         isLoaded = true,
                         nextTriggerTimeMillis = settings.nextTriggerTimeMillis
                             ?: _uiState.value.nextTriggerTimeMillis,
+                        silentMode = settings.silentMode,
+                        vibrationEnabled = settings.vibrationEnabled,
+                        vibrationIntensity = settings.vibrationIntensity,
                     )
                     if (settings.masterEnabled && !_uiState.value.masterEnabled && !_uiState.value.isLoaded) {
                         val context = getApplication<SittingReminderApp>()
@@ -130,6 +136,27 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
         viewModelScope.launch {
             val current = repository.getSettings()
             repository.updateSettings(current.copy(ringtoneUri = uri))
+        }
+    }
+
+    fun toggleSilentMode(enabled: Boolean) {
+        viewModelScope.launch {
+            val current = repository.getSettings()
+            repository.updateSettings(current.copy(silentMode = enabled))
+        }
+    }
+
+    fun toggleVibration(enabled: Boolean) {
+        viewModelScope.launch {
+            val current = repository.getSettings()
+            repository.updateSettings(current.copy(vibrationEnabled = enabled))
+        }
+    }
+
+    fun updateVibrationIntensity(intensity: Int) {
+        viewModelScope.launch {
+            val current = repository.getSettings()
+            repository.updateSettings(current.copy(vibrationIntensity = intensity))
         }
     }
 }

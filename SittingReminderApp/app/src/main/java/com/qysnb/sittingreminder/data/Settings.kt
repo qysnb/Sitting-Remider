@@ -16,4 +16,7 @@ data class Settings(
     val ringtoneUri: String? = null,
     val masterEnabled: Boolean = false,
     val nextTriggerTimeMillis: Long? = null,
+    val silentMode: Boolean = false,
+    val vibrationEnabled: Boolean = true,
+    val vibrationIntensity: Int = 3,
 )

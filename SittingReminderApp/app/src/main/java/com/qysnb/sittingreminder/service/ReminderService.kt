@@ -3,10 +3,15 @@ package com.qysnb.sittingreminder.service
 import android.app.Notification
 import android.app.PendingIntent
 import android.app.Service
+import android.content.Context
 import android.content.Intent
 import android.media.RingtoneManager
 import android.net.Uri
+import android.os.Build
 import android.os.IBinder
+import android.os.VibrationEffect
+import android.os.Vibrator
+import android.os.VibratorManager
 import androidx.core.app.NotificationCompat
 import androidx.core.app.NotificationManagerCompat
 import com.qysnb.sittingreminder.MainActivity
@@ -36,6 +41,7 @@ class ReminderService : Service() {
     private lateinit var settingsRepository: SettingsRepository
     private var nextTriggerTimeMillis: Long? = null
     private var countdownJob: Job? = null
+    private lateinit var vibrator: Vibrator
 
     override fun onCreate() {
         super.onCreate()
@@ -43,6 +49,13 @@ class ReminderService : Service() {
         alarmScheduler = AlarmScheduler(this)
         val db = (application as SittingReminderApp).database
         settingsRepository = SettingsRepository(db.settingsDao())
+        vibrator = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
+            val manager = getSystemService(Context.VIBRATOR_MANAGER_SERVICE) as VibratorManager
+            manager.defaultVibrator
+        } else {
+            @Suppress("DEPRECATION")
+            getSystemService(Context.VIBRATOR_SERVICE) as Vibrator
+        }
     }
 
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
@@ -162,6 +175,7 @@ class ReminderService : Service() {
         updateForegroundNotification()
         stateManager.onStandUpTriggered()
         showAlertNotification(getString(R.string.stand_up_reminder))
+        vibrate()
         playRingtone()
         scheduleSitBack()
     }
@@ -170,6 +184,7 @@ class ReminderService : Service() {
         nextTriggerTimeMillis = null
         updateForegroundNotification()
         showAlertNotification(getString(R.string.sit_back_reminder))
+        vibrate()
         playRingtone()
         stateManager.onCycleComplete()
         scheduleNextStandUp()
@@ -254,9 +269,23 @@ class ReminderService : Service() {
     private fun playRingtone() {
         scope.launch {
             val settings = settingsRepository.getSettings()
+            if (settings.silentMode) return@launch
             val ringtoneUri = settings.ringtoneUri?.let { Uri.parse(it) }
                 ?: RingtoneManager.getDefaultUri(RingtoneManager.TYPE_ALARM)
             audioPlayer.play(this@ReminderService, ringtoneUri)
+        }
+    }
+
+    private fun vibrate() {
+        scope.launch {
+            val settings = settingsRepository.getSettings()
+            if (!settings.vibrationEnabled) return@launch
+            val intensity = settings.vibrationIntensity.coerceIn(1, 5)
+            val amplitude = (intensity * 51).coerceAtMost(255)
+            val timings = longArrayOf(0, 600, 300, 600)
+            val amplitudes = intArrayOf(0, amplitude, 0, amplitude)
+            val effect = VibrationEffect.createWaveform(timings, amplitudes, -1)
+            vibrator.vibrate(effect)
         }
     }
 
