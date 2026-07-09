@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">久坐助手</string>
+    <string name="master_toggle">提醒开关</string>
+    <string name="master_toggle_on">已开启</string>
+    <string name="master_toggle_off">已关闭</string>
+    <string name="next_reminder">下次提醒</string>
+    <string name="reminder_interval">提醒间隔</string>
+    <string name="sit_back_delay">入座延迟</string>
+    <string name="hours">时</string>
+    <string name="minutes">分</string>
+    <string name="seconds">秒</string>
+    <string name="start_time">开始时间</string>
+    <string name="end_time">结束时间</string>
+    <string name="ringtone">提醒铃声</string>
+    <string name="default_ringtone">默认闹钟铃声</string>
+    <string name="select_ringtone">选择铃声</string>
+    <string name="test_play">测试</string>
+    <string name="about">关于</string>
+    <string name="app_version">v 0.2.0</string>
+    <string name="developer">Qysnb with DeepSeek V4 Flash</string>
+    <string name="license">Apache Licence 2.0</string>
+    <string name="app_description">久坐助手是一款轻量级提醒应用，定时提醒您起身活动，预防久坐带来的健康问题。</string>
+    <string name="github_link">待定</string>
+    <string name="notification_channel_name">久坐助手提醒</string>
+    <string name="notification_channel_desc">显示当前提醒状态</string>
+    <string name="notification_alert_channel_name">久坐助手闹钟</string>
+    <string name="notification_alert_channel_desc">提醒您站立或坐下</string>
+    <string name="notification_text">提醒已开启</string>
+    <string name="stand_up_reminder">该站起来活动一下了！</string>
+    <string name="sit_back_reminder">可以坐下了</string>
+    <string name="dismiss">关闭</string>
+    <string name="stop_ringtone">停止响铃</string>
+    <string name="battery_optimization_title">请关闭电池优化</string>
+    <string name="battery_optimization_message">为了确保提醒准时送达，请允许久坐助手在后台运行。</string>
+    <string name="open_settings">打开设置</string>
+    <string name="permission_exact_alarm_title">请授予精确闹钟权限</string>
+    <string name="permission_exact_alarm_message">久坐助手需要精确闹钟权限才能准时提醒您。</string>
+    <string name="confirm">确定</string>
+    <string name="cancel">取消</string>
+    <string name="later">稍后</string>
+</resources>
