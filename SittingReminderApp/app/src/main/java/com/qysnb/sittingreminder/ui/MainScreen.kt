@@ -108,6 +108,27 @@ fun MainScreen(viewModel: MainViewModel = viewModel()) {
                         ringtoneUri = state.ringtoneUri,
                         onRingtoneSelected = viewModel::updateRingtoneUri
                     )
+
+                    HorizontalDivider(modifier = Modifier.padding(vertical = 8.dp))
+
+                    Text(
+                        "铃声音量",
+                        style = MaterialTheme.typography.bodyMedium,
+                        color = MaterialTheme.colorScheme.onSurfaceVariant
+                    )
+                    Spacer(modifier = Modifier.height(4.dp))
+                    Slider(
+                        value = state.ringtoneVolume.toFloat(),
+                        onValueChange = { viewModel.updateRingtoneVolume(it.toInt()) },
+                        valueRange = 0f..100f,
+                        modifier = Modifier.fillMaxWidth()
+                    )
+                    Row(
+                        modifier = Modifier.fillMaxWidth(),
+                        horizontalArrangement = Arrangement.SpaceBetween
+                    ) {
+                        Text("${state.ringtoneVolume}%", style = MaterialTheme.typography.labelMedium)
+                    }
                 }
             }
 

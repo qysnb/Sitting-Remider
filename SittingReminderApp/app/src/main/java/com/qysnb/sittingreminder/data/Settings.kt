@@ -19,4 +19,5 @@ data class Settings(
     val silentMode: Boolean = false,
     val vibrationEnabled: Boolean = true,
     val vibrationIntensity: Int = 3,
+    val ringtoneVolume: Int = 100,
 )

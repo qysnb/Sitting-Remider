@@ -28,6 +28,7 @@ data class UiState(
     val silentMode: Boolean = false,
     val vibrationEnabled: Boolean = true,
     val vibrationIntensity: Int = 3,
+    val ringtoneVolume: Int = 100,
 )
 
 class MainViewModel(application: Application) : AndroidViewModel(application) {
@@ -61,6 +62,7 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
                         silentMode = settings.silentMode,
                         vibrationEnabled = settings.vibrationEnabled,
                         vibrationIntensity = settings.vibrationIntensity,
+                        ringtoneVolume = settings.ringtoneVolume,
                     )
                     if (settings.masterEnabled && !_uiState.value.masterEnabled && !_uiState.value.isLoaded) {
                         val context = getApplication<SittingReminderApp>()
@@ -157,6 +159,13 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
         viewModelScope.launch {
             val current = repository.getSettings()
             repository.updateSettings(current.copy(vibrationIntensity = intensity))
+        }
+    }
+
+    fun updateRingtoneVolume(volume: Int) {
+        viewModelScope.launch {
+            val current = repository.getSettings()
+            repository.updateSettings(current.copy(ringtoneVolume = volume))
         }
     }
 }

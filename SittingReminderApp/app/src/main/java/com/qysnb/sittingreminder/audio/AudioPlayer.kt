@@ -17,7 +17,7 @@ class AudioPlayer {
     private var mediaPlayer: MediaPlayer? = null
     private var playJob: Job? = null
 
-    suspend fun play(context: Context, uri: Uri, durationMs: Long = 0L) {
+    suspend fun play(context: Context, uri: Uri, volume: Float = 1f, durationMs: Long = 0L) {
         playJob?.cancel()
         playJob = coroutineContext[Job]
         withContext(Dispatchers.Main) {
@@ -33,6 +33,7 @@ class AudioPlayer {
             }
             suspendCancellableCoroutine<Unit> { cont ->
                 player.setOnPreparedListener {
+                    player.setVolume(volume, volume)
                     player.start()
                     cont.resume(Unit) { }
                 }

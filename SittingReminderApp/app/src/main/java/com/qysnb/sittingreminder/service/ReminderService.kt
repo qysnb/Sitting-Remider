@@ -151,6 +151,7 @@ class ReminderService : Service() {
 
     private fun stop() {
         audioPlayer.stop()
+        cancelVibration()
         stopCountdownUpdates()
         alarmScheduler.cancelAlarm(AlarmScheduler.REQUEST_CODE_STAND_UP)
         alarmScheduler.cancelAlarm(AlarmScheduler.REQUEST_CODE_SIT_BACK)
@@ -263,6 +264,7 @@ class ReminderService : Service() {
 
     private fun dismissAlert() {
         audioPlayer.stop()
+        cancelVibration()
         NotificationManagerCompat.from(this).cancel(ALERT_NOTIFICATION_ID)
     }
 
@@ -272,7 +274,8 @@ class ReminderService : Service() {
             if (settings.silentMode) return@launch
             val ringtoneUri = settings.ringtoneUri?.let { Uri.parse(it) }
                 ?: RingtoneManager.getDefaultUri(RingtoneManager.TYPE_ALARM)
-            audioPlayer.play(this@ReminderService, ringtoneUri)
+            val volume = settings.ringtoneVolume / 100f
+            audioPlayer.play(this@ReminderService, ringtoneUri, volume)
         }
     }
 
@@ -284,9 +287,13 @@ class ReminderService : Service() {
             val amplitude = (intensity * 51).coerceAtMost(255)
             val timings = longArrayOf(0, 600, 300, 600)
             val amplitudes = intArrayOf(0, amplitude, 0, amplitude)
-            val effect = VibrationEffect.createWaveform(timings, amplitudes, -1)
+            val effect = VibrationEffect.createWaveform(timings, amplitudes, 0)
             vibrator.vibrate(effect)
         }
+    }
+
+    private fun cancelVibration() {
+        vibrator.cancel()
     }
 
     override fun onBind(intent: Intent?): IBinder? = null
@@ -301,6 +308,7 @@ class ReminderService : Service() {
         alarmScheduler.cancelAlarm(AlarmScheduler.REQUEST_CODE_STAND_UP)
         alarmScheduler.cancelAlarm(AlarmScheduler.REQUEST_CODE_SIT_BACK)
         audioPlayer.stop()
+        cancelVibration()
         ensureForeground()
         startCountdownUpdates()
         scheduleNextStandUp()
