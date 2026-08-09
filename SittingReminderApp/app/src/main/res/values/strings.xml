@@ -30,7 +30,7 @@
     <string name="stand_up_reminder">该站起来活动一下了！</string>
     <string name="sit_back_reminder">可以坐下了</string>
     <string name="dismiss">关闭</string>
-    <string name="stop_ringtone">停止响铃</string>
+    <string name="dismiss_alert">关闭提醒</string>
     <string name="battery_optimization_title">请关闭电池优化</string>
     <string name="battery_optimization_message">为了确保提醒准时送达，请允许久坐助手在后台运行。</string>
     <string name="open_settings">打开设置</string>

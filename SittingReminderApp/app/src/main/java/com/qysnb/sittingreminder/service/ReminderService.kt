@@ -12,6 +12,7 @@ import android.os.IBinder
 import android.os.VibrationEffect
 import android.os.Vibrator
 import android.os.VibratorManager
+import android.widget.RemoteViews
 import androidx.core.app.NotificationCompat
 import androidx.core.app.NotificationManagerCompat
 import com.qysnb.sittingreminder.MainActivity
@@ -100,12 +101,16 @@ class ReminderService : Service() {
             }
         } ?: getString(R.string.notification_text)
 
+        val remoteViews = RemoteViews(packageName, R.layout.reminder_notification_layout).apply {
+            setTextViewText(R.id.alert_text, countdownText)
+            setOnClickPendingIntent(R.id.dismiss_button, dismissPendingIntent)
+        }
+
         return NotificationCompat.Builder(this, SittingReminderApp.CHANNEL_ID)
-            .setContentTitle(getString(R.string.app_name))
-            .setContentText(countdownText)
             .setSmallIcon(android.R.drawable.ic_dialog_info)
+            .setCustomContentView(remoteViews)
+            .setStyle(NotificationCompat.DecoratedCustomViewStyle())
             .setContentIntent(pendingIntent)
-            .addAction(android.R.drawable.ic_menu_close_clear_cancel, getString(R.string.stop_ringtone), dismissPendingIntent)
             .setOngoing(true)
             .setOnlyAlertOnce(true)
             .build()
@@ -250,14 +255,16 @@ class ReminderService : Service() {
         val dismissPendingIntent = PendingIntent.getService(
             this, 0, dismissIntent, PendingIntent.FLAG_IMMUTABLE or PendingIntent.FLAG_UPDATE_CURRENT
         )
+        val remoteViews = RemoteViews(packageName, R.layout.reminder_notification_layout).apply {
+            setTextViewText(R.id.alert_text, text)
+            setOnClickPendingIntent(R.id.dismiss_button, dismissPendingIntent)
+        }
         val notification = NotificationCompat.Builder(this, SittingReminderApp.ALERT_CHANNEL_ID)
-            .setContentTitle(getString(R.string.app_name))
-            .setContentText(text)
             .setSmallIcon(android.R.drawable.ic_dialog_alert)
+            .setCustomContentView(remoteViews)
+            .setStyle(NotificationCompat.DecoratedCustomViewStyle())
             .setFullScreenIntent(dismissPendingIntent, true)
-            .addAction(android.R.drawable.ic_menu_close_clear_cancel, getString(R.string.dismiss), dismissPendingIntent)
             .setAutoCancel(false)
-            .setOngoing(false)
             .build()
         NotificationManagerCompat.from(this).notify(ALERT_NOTIFICATION_ID, notification)
     }
